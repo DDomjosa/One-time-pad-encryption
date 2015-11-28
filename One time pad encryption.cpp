@@ -166,81 +166,92 @@ int main()
     std::mt19937 randomGenerator(time(NULL));
     std::uniform_int_distribution<int> randomNumber(0, 255);
     std::vector<unsigned char> plainTextChars, keyChars, ciphertextChars;
-    createFiles();
-    std::cout << "(1)Encryption;" << std::endl << "(2)Decryption: ";
-    int choice1 = getInt(1, 2);
-    switch (choice1)
+    bool go;
+    do
     {
-    case 1:
+        plainTextChars.clear();
+        keyChars.clear();
+        ciphertextChars.clear();
+        createFiles();
+        std::cout << "(1)Encryption;" << std::endl << "(2)Decryption: ";
+        int choice1 = getInt(1, 2);
+        switch (choice1)
         {
-            std::cout << std::endl << "Plain text: 'Input\\(E)Plain text.txt'" << std::endl << "(1)Random key;" << std::endl << "(2)Key: 'Input\\(E)Key.ddkey': ";
-            int choice2 = getInt(1, 2);
-            std::cout << std::endl << "Press ENTER after the files are ready! ";
-            ignore();
-            switch (choice2)
+        case 1:
             {
-            case 1:
+                std::cout << std::endl << "Plain text: 'Input\\(E)Plain text.txt'" << std::endl << "(1)Random key;" << std::endl << "(2)Key: 'Input\\(E)Key.ddkey': ";
+                int choice2 = getInt(1, 2);
+                std::cout << std::endl << "Press ENTER after the files are ready! ";
+                ignore();
+                switch (choice2)
                 {
-                    if (inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true))
+                case 1:
                     {
-                        for (int i=0;i<plainTextChars.size();i++)
-                            keyChars.push_back(keyChar(randomGenerator, randomNumber));
-                        xorVectors(plainTextChars, keyChars, ciphertextChars);
+                        if (inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true))
+                        {
+                            for (int i=0;i<plainTextChars.size();i++)
+                                keyChars.push_back(keyChar(randomGenerator, randomNumber));
+                            xorVectors(plainTextChars, keyChars, ciphertextChars);
+                        }
+                        else
+                            plainTextChars.clear();
+                        break;
                     }
-                    else
-                        plainTextChars.clear();
-                    break;
+                case 2:
+                    {
+                        if ((inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true)) && (inputFromFile("Input\\(E)Key.ddkey", keyChars, false)))
+                            xorVectors(plainTextChars, keyChars, ciphertextChars);
+                        else
+                        {
+                            plainTextChars.clear();
+                            keyChars.clear();
+                        }
+                        break;
+                    }
                 }
-            case 2:
+                if (plainTextChars.size())
                 {
-                    if ((inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true)) && (inputFromFile("Input\\(E)Key.ddkey", keyChars, false)))
-                        xorVectors(plainTextChars, keyChars, ciphertextChars);
-                    else
-                    {
-                        plainTextChars.clear();
-                        keyChars.clear();
-                    }
-                    break;
+                    std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
+                    std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
+                    std::string rawKey(keyChars.begin(), keyChars.end());
+                    keyChars.clear();
+                    std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
+                    rawKey.clear();
+                    keyPrint << base64Key;
+                    std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
+                    ciphertextChars.clear();
+                    std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
+                    rawCiphertext.clear();
+                    ciphertextPrint << base64Ciphertext;
+                }
+                break;
+            }
+        case 2:
+            {
+                std::cout << std::endl << "Key: 'Input\\(D)Key.ddkey';" << std::endl << "Ciphertext: 'Input\\(D)Ciphertext.ddkey'.";
+                std::cout << std::endl << "Press ENTER after the files are ready! ";
+                ignore();
+                if ((inputFromFile("Input\\(D)Key.ddkey", keyChars, false)) && (inputFromFile("Input\\(D)Ciphertext.ddkey", ciphertextChars, false)))
+                    xorVectors(keyChars, ciphertextChars, plainTextChars);
+                else
+                {
+                    keyChars.clear();
+                    ciphertextChars.clear();
+                }
+                if (keyChars.size())
+                {
+                    std::cout << std::endl << "Plain text:\t'Output\\(D)Plain text.txt'";
+                    std::ofstream plainTextPrint("Output\\(D)Plain text.txt");
+                    for (int i=0;i<plainTextChars.size();i++)
+                        plainTextPrint << plainTextChars[i];
                 }
             }
-            if (plainTextChars.size())
-            {
-                std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
-                std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
-                std::string rawKey(keyChars.begin(), keyChars.end());
-                keyChars.clear();
-                std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
-                rawKey.clear();
-                keyPrint << base64Key;
-                std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
-                ciphertextChars.clear();
-                std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
-                rawCiphertext.clear();
-                ciphertextPrint << base64Ciphertext;
-            }
-            break;
         }
-    case 2:
-        {
-            std::cout << std::endl << "Key: 'Input\\(D)Key.ddkey';" << std::endl << "Ciphertext: 'Input\\(D)Ciphertext.ddkey'.";
-            std::cout << std::endl << "Press ENTER after the files are ready! ";
-            ignore();
-            if ((inputFromFile("Input\\(D)Key.ddkey", keyChars, false)) && (inputFromFile("Input\\(D)Ciphertext.ddkey", ciphertextChars, false)))
-                xorVectors(keyChars, ciphertextChars, plainTextChars);
-            else
-            {
-                keyChars.clear();
-                ciphertextChars.clear();
-            }
-            if (keyChars.size())
-            {
-                std::cout << std::endl << "Plain text:\t'Output\\(D)Plain text.txt'";
-                std::ofstream plainTextPrint("Output\\(D)Plain text.txt");
-                for (int i=0;i<plainTextChars.size();i++)
-                    plainTextPrint << plainTextChars[i];
-            }
-        }
+        std::cout << std::endl << std::endl << "(1)Continue;" << std::endl << "(2)Exit: ";
+        go = getInt(1, 2) == 1 ? true : false;
+        std::cout << std::endl;
     }
-    std::cout << std::endl << std::endl << "Press ENTER to exit! ";
+    while (go);
+    std::cout << "Press ENTER to exit! ";
     ignore();
 }
