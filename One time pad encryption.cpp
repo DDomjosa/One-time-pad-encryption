@@ -160,6 +160,8 @@ void createFiles()
     temp.close();
     temp.open("Output\\(E)Key.ddkey", std::ios::app);
     temp.close();
+    temp.open("Output\\(R)Key.ddkey", std::ios::app);
+    temp.close();
 }
 int main()
 {
@@ -173,8 +175,8 @@ int main()
         keyChars.clear();
         ciphertextChars.clear();
         createFiles();
-        std::cout << "(1)Encryption;" << std::endl << "(2)Decryption: ";
-        int choice1 = getInt(1, 2);
+        std::cout << "(1)Encryption;" << std::endl << "(2)Decryption;" << std::endl << "(3)Key generation: ";
+        int choice1 = getInt(1, 3);
         switch (choice1)
         {
         case 1:
@@ -183,6 +185,7 @@ int main()
                 int choice2 = getInt(1, 2);
                 std::cout << std::endl << "Press ENTER after the files are ready! ";
                 ignore();
+                bool printKey;
                 switch (choice2)
                 {
                 case 1:
@@ -192,6 +195,7 @@ int main()
                             for (int i=0;i<plainTextChars.size();i++)
                                 keyChars.push_back(keyChar(randomGenerator, randomNumber));
                             xorVectors(plainTextChars, keyChars, ciphertextChars);
+                            printKey = true;
                         }
                         else
                             plainTextChars.clear();
@@ -200,7 +204,10 @@ int main()
                 case 2:
                     {
                         if ((inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true)) && (inputFromFile("Input\\(E)Key.ddkey", keyChars, false)))
+                        {
                             xorVectors(plainTextChars, keyChars, ciphertextChars);
+                            printKey = false;
+                        }
                         else
                         {
                             plainTextChars.clear();
@@ -211,18 +218,31 @@ int main()
                 }
                 if (plainTextChars.size())
                 {
-                    std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
-                    std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
-                    std::string rawKey(keyChars.begin(), keyChars.end());
-                    keyChars.clear();
-                    std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
-                    rawKey.clear();
-                    keyPrint << base64Key;
-                    std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
-                    ciphertextChars.clear();
-                    std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
-                    rawCiphertext.clear();
-                    ciphertextPrint << base64Ciphertext;
+                    if (printKey)
+                    {
+                        std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
+                        std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
+                        std::string rawKey(keyChars.begin(), keyChars.end());
+                        keyChars.clear();
+                        std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
+                        rawKey.clear();
+                        keyPrint << base64Key;
+                        std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
+                        ciphertextChars.clear();
+                        std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
+                        rawCiphertext.clear();
+                        ciphertextPrint << base64Ciphertext;
+                    }
+                    else
+                    {
+                        std::cout << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
+                        std::ofstream ciphertextPrint("Output\\(E)Ciphertext.ddkey");
+                        std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
+                        ciphertextChars.clear();
+                        std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
+                        rawCiphertext.clear();
+                        ciphertextPrint << base64Ciphertext;
+                    }
                 }
                 break;
             }
@@ -245,6 +265,20 @@ int main()
                     for (int i=0;i<plainTextChars.size();i++)
                         plainTextPrint << plainTextChars[i];
                 }
+            }
+        case 3:
+            {
+                std::cout << std::endl << "(1 - 100000000)Key's effective characters: ";
+                int choice3 = getInt(1, 100000000);
+                std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey'";
+                for (int i=0;i<choice3;i++)
+                    keyChars.push_back(keyChar(randomGenerator, randomNumber));
+                std::ofstream keyPrint("Output\\(R)Key.ddkey");
+                std::string rawKey(keyChars.begin(), keyChars.end());
+                keyChars.clear();
+                std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
+                rawKey.clear();
+                keyPrint << base64Key;
             }
         }
         std::cout << std::endl << std::endl << "(1)Continue;" << std::endl << "(2)Exit: ";
