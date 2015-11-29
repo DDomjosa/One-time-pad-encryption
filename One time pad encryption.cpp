@@ -169,13 +169,14 @@ int main()
     std::uniform_int_distribution<int> randomNumber(0, 255);
     std::vector<unsigned char> plainTextChars, keyChars, ciphertextChars;
     bool go;
+    std::cout << "DDomjosa's one time pad encryption/decryption program" << std::endl;
     do
     {
         plainTextChars.clear();
         keyChars.clear();
         ciphertextChars.clear();
         createFiles();
-        std::cout << "(1)Encryption;" << std::endl << "(2)Decryption;" << std::endl << "(3)Key generation: ";
+        std::cout << std::endl << "(1)Encryption;" << std::endl << "(2)Decryption;" << std::endl << "(3)Key generation: ";
         int choice1 = getInt(1, 3);
         switch (choice1)
         {
@@ -203,7 +204,9 @@ int main()
                     }
                 case 2:
                     {
-                        if ((inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true)) && (inputFromFile("Input\\(E)Key.ddkey", keyChars, false)))
+                        bool plainText = inputFromFile("Input\\(E)Plain text.txt", plainTextChars, true);
+                        bool key = inputFromFile("Input\\(E)Key.ddkey", keyChars, false);
+                        if (plainText && key)
                         {
                             xorVectors(plainTextChars, keyChars, ciphertextChars);
                             printKey = false;
@@ -251,7 +254,9 @@ int main()
                 std::cout << std::endl << "Key: 'Input\\(D)Key.ddkey'" << std::endl << "Ciphertext: 'Input\\(D)Ciphertext.ddkey' ";
                 std::cout << std::endl << "Press ENTER after the files are ready! ";
                 ignore();
-                if ((inputFromFile("Input\\(D)Key.ddkey", keyChars, false)) && (inputFromFile("Input\\(D)Ciphertext.ddkey", ciphertextChars, false)))
+                bool key = inputFromFile("Input\\(D)Key.ddkey", keyChars, false);
+                bool ciphertext = inputFromFile("Input\\(D)Ciphertext.ddkey", ciphertextChars, false);
+                if (key && ciphertext)
                     xorVectors(keyChars, ciphertextChars, plainTextChars);
                 else
                 {
@@ -285,9 +290,8 @@ int main()
         }
         std::cout << std::endl << std::endl << "(1)Continue;" << std::endl << "(2)Exit: ";
         go = getInt(1, 2) == 1 ? true : false;
-        std::cout << std::endl;
     }
     while (go);
-    std::cout << "Press ENTER to exit! ";
+    std::cout << std::endl << "Press ENTER to exit! ";
     ignore();
 }
