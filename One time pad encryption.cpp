@@ -220,7 +220,7 @@ int main()
                 {
                     if (printKey)
                     {
-                        std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
+                        std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey' ";
                         std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         std::string rawKey(keyChars.begin(), keyChars.end());
                         keyChars.clear();
@@ -235,7 +235,7 @@ int main()
                     }
                     else
                     {
-                        std::cout << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey'";
+                        std::cout << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey' ";
                         std::ofstream ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
                         ciphertextChars.clear();
@@ -248,7 +248,7 @@ int main()
             }
         case 2:
             {
-                std::cout << std::endl << "Key: 'Input\\(D)Key.ddkey';" << std::endl << "Ciphertext: 'Input\\(D)Ciphertext.ddkey'.";
+                std::cout << std::endl << "Key: 'Input\\(D)Key.ddkey'" << std::endl << "Ciphertext: 'Input\\(D)Ciphertext.ddkey' ";
                 std::cout << std::endl << "Press ENTER after the files are ready! ";
                 ignore();
                 if ((inputFromFile("Input\\(D)Key.ddkey", keyChars, false)) && (inputFromFile("Input\\(D)Ciphertext.ddkey", ciphertextChars, false)))
@@ -260,7 +260,7 @@ int main()
                 }
                 if (keyChars.size())
                 {
-                    std::cout << std::endl << "Plain text:\t'Output\\(D)Plain text.txt'";
+                    std::cout << std::endl << "Plain text:\t'Output\\(D)Plain text.txt' ";
                     std::ofstream plainTextPrint("Output\\(D)Plain text.txt");
                     for (int i=0;i<plainTextChars.size();i++)
                         plainTextPrint << plainTextChars[i];
@@ -271,7 +271,7 @@ int main()
             {
                 std::cout << std::endl << "(1 - 100000000)Key's effective characters: ";
                 int choice3 = getInt(1, 100000000);
-                std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey'";
+                std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
                 for (int i=0;i<choice3;i++)
                     keyChars.push_back(keyChar(randomGenerator, randomNumber));
                 std::ofstream keyPrint("Output\\(R)Key.ddkey");
