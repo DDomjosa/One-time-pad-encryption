@@ -265,6 +265,7 @@ int main()
                     for (int i=0;i<plainTextChars.size();i++)
                         plainTextPrint << plainTextChars[i];
                 }
+                break;
             }
         case 3:
             {
@@ -279,6 +280,7 @@ int main()
                 std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
                 rawKey.clear();
                 keyPrint << base64Key;
+                break;
             }
         }
         std::cout << std::endl << std::endl << "(1)Continue;" << std::endl << "(2)Exit: ";
