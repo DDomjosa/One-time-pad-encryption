@@ -224,26 +224,27 @@ int main()
                     if (printKey)
                     {
                         std::cout << std::endl << "Key:\t\t'Output\\(E)Key.ddkey'" << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey' ";
-                        std::ofstream keyPrint("Output\\(E)Key.ddkey"), ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         std::string rawKey(keyChars.begin(), keyChars.end());
                         keyChars.clear();
                         std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
                         rawKey.clear();
+                        std::ofstream keyPrint("Output\\(E)Key.ddkey");
                         keyPrint << base64Key;
                         std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
                         ciphertextChars.clear();
                         std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
                         rawCiphertext.clear();
+                        std::ofstream ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         ciphertextPrint << base64Ciphertext;
                     }
                     else
                     {
                         std::cout << std::endl << "Ciphertext:\t'Output\\(E)Ciphertext.ddkey' ";
-                        std::ofstream ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         std::string rawCiphertext(ciphertextChars.begin(), ciphertextChars.end());
                         ciphertextChars.clear();
                         std::string base64Ciphertext = base64_encode(reinterpret_cast<const unsigned char*>(rawCiphertext.c_str()), rawCiphertext.length());
                         rawCiphertext.clear();
+                        std::ofstream ciphertextPrint("Output\\(E)Ciphertext.ddkey");
                         ciphertextPrint << base64Ciphertext;
                     }
                 }
@@ -274,16 +275,16 @@ int main()
             }
         case 3:
             {
-                std::cout << std::endl << "(1 - 100000000)Key's effective characters: ";
-                int choice3 = getInt(1, 100000000);
+                std::cout << std::endl << "(1 - 128000000)Key's effective characters: ";
+                int choice3 = getInt(1, 128000000);
                 std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
                 for (int i=0;i<choice3;i++)
                     keyChars.push_back(keyChar(randomGenerator, randomNumber));
-                std::ofstream keyPrint("Output\\(R)Key.ddkey");
                 std::string rawKey(keyChars.begin(), keyChars.end());
                 keyChars.clear();
                 std::string base64Key = base64_encode(reinterpret_cast<const unsigned char*>(rawKey.c_str()), rawKey.length());
                 rawKey.clear();
+                std::ofstream keyPrint("Output\\(R)Key.ddkey");
                 keyPrint << base64Key;
                 break;
             }
