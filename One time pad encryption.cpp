@@ -109,6 +109,8 @@ std::string inputFromFile(std::string fileName, bool plainText)
 std::string xorStrings(std::string& input1, std::string& input2)
 {
     int strLength = input1.length() < input2.length() ? input1.length() : input2.length();
+    if (input1.length() != input2.length())
+        std::cout << "Input sizes do not match! Using the lower one.";
     std::string output;
     for (int i=0;i<strLength;i++)
         output += (input1[i] ^ input2[i]);
@@ -153,9 +155,6 @@ int main()
     std::cout << "DDomjosa's one time pad encryption/decryption program" << std::endl;
     do
     {
-        plaintext.clear();
-        key.clear();
-        ciphertext.clear();
         createFiles();
         std::cout << std::endl << "(1)Encryption;" << std::endl << "(2)Decryption;" << std::endl << "(3)Key generation: ";
         int choice1 = getInt(1, 3);
@@ -243,19 +242,55 @@ int main()
             }
         case 3:
             {
-                std::cout << std::endl << "(1 - 128000000)Key's effective bytes: ";
-                int choice3 = getInt(1, 128000000);
-                std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
-                for (int i=0;i<choice3;i++)
-                    key += keyChar(randomGenerator, randomNumber);
-                key = base64_encode(reinterpret_cast<const unsigned char*>(key.c_str()), key.length());
-                std::ofstream keyOutput("Output\\(R)Key.ddkey");
-                keyOutput << key;
+                std::cout << std::endl << "(1)Bytes;" << std::endl << "(2)Kilobytes;" << std::endl << "(3)Megabytes: ";
+                int choice3 = getInt(1, 3);
+                switch (choice3)
+                {
+                case 1:
+                    {
+                        std::cout << std::endl << "(1 - 1024)Key's effective bytes: ";
+                        int bytes = getInt(1, 1024);
+                        std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
+                        for (int i=0;i<bytes;i++)
+                            key += keyChar(randomGenerator, randomNumber);
+                        key = base64_encode(reinterpret_cast<const unsigned char*>(key.c_str()), key.length());
+                        std::ofstream keyOutput("Output\\(R)Key.ddkey");
+                        keyOutput << key;
+                        break;
+                    }
+                case 2:
+                    {
+                        std::cout << std::endl << "(1 - 1024)Key's effective kilobytes: ";
+                        int kilobytes = getInt(1, 1024);
+                        std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
+                        for (int i=0;i<1024*kilobytes;i++)
+                            key += keyChar(randomGenerator, randomNumber);
+                        key = base64_encode(reinterpret_cast<const unsigned char*>(key.c_str()), key.length());
+                        std::ofstream keyOutput("Output\\(R)Key.ddkey");
+                        keyOutput << key;
+                        break;
+                    }
+                case 3:
+                    {
+                        std::cout << std::endl << "(1 - 256)Key's effective megabytes: ";
+                        int megabytes = getInt(1, 256);
+                        std::cout << std::endl << "Key:\t\t'Output\\(R)Key.ddkey' ";
+                        for (int i=0;i<1048576*megabytes;i++)
+                            key += keyChar(randomGenerator, randomNumber);
+                        key = base64_encode(reinterpret_cast<const unsigned char*>(key.c_str()), key.length());
+                        std::ofstream keyOutput("Output\\(R)Key.ddkey");
+                        keyOutput << key;
+                        break;
+                    }
+                }
                 break;
             }
         }
         std::cout << std::endl << std::endl << "(1)Continue;" << std::endl << "(2)Exit: ";
         repeat = getInt(1, 2) == 1 ? true : false;
+        plaintext.clear();
+        key.clear();
+        ciphertext.clear();
     }
     while (repeat);
     std::cout << std::endl << "Press ENTER to exit! ";
