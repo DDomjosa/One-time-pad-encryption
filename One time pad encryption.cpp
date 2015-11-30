@@ -120,10 +120,6 @@ unsigned char keyChar(std::mt19937& randomGenerator, std::uniform_int_distributi
 {
     return (unsigned char)randomNumber(randomGenerator);
 }
-void ignore()
-{
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
 void createFiles()
 {
     CreateDirectory("Input", NULL);
@@ -146,6 +142,10 @@ void createFiles()
     temp.open("Output\\(R)Key.ddkey", std::ios::app);
     temp.close();
 }
+void ignore()
+{
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 int main()
 {
     std::mt19937 randomGenerator(time(NULL));
@@ -162,7 +162,7 @@ int main()
         {
         case 1:
             {
-                std::cout << std::endl << "Plain text:\t'Input\\(E)Plain text.txt'" << std::endl << "(1)Random key;" << std::endl << "(2)Key:\t'Input\\(E)Key.ddkey': ";
+                std::cout << std::endl << "Plain text:\t'Input\\(E)Plain text.txt'" << std::endl << "(1)Random key;" << std::endl << "(2)Key: 'Input\\(E)Key.ddkey': ";
                 int choice2 = getInt(1, 2);
                 std::cout << std::endl << "Press ENTER after the files are ready! ";
                 ignore();
